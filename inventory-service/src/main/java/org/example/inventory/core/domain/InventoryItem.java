@@ -1,7 +1,13 @@
 package org.example.inventory.core.domain;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "inventory_items")
 public class InventoryItem {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int stock;
