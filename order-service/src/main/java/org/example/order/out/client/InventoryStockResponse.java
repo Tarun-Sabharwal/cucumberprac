@@ -1,19 +1,10 @@
-package org.example.inventory.out.persistence;
+package org.example.order.out.client;
 
-import jakarta.persistence.*;
+public class InventoryStockResponse {
 
-@Entity
-@Table(name = "inventory")
-public class InventoryEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String name;
     private int stock;
-
-    public InventoryEntity() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }

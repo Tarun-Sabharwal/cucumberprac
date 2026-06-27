@@ -4,6 +4,7 @@ import org.example.order.common.UseCase;
 import org.example.order.config.RabbitMQConfig;
 import org.example.order.core.domain.Order;
 import org.example.order.core.domain.OrderStatus;
+import org.example.order.core.port.CheckInventoryPort;
 import org.example.order.core.port.ManageOrderPort;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,20 @@ public class OrderUseCase {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private CheckInventoryPort checkInventoryPort;
+
     public Order createOrder(Order order) {
         if (order.getQuantity() < 1 || order.getQuantity() > 90) {
             throw new IllegalArgumentException("Quantity must be between 1 and 90");
         }
+
+        int availableStock = checkInventoryPort.getAvailableStock(order.getProduct());
+        if (order.getQuantity() > availableStock) {
+            throw new IllegalArgumentException("Insufficient stock for '" + order.getProduct()
+                    + "': requested " + order.getQuantity() + ", available " + availableStock);
+        }
+
         order.setStatus(OrderStatus.PENDING);
         Order saved = manageOrderPort.save(order);
 

@@ -25,6 +25,10 @@ public class InventoryUseCase {
         return manageInventoryPort.findById(id);
     }
 
+    public Optional<InventoryItem> getItemByName(String name) {
+        return manageInventoryPort.findByName(name);
+    }
+
     public List<InventoryItem> getAllItems() {
         return manageInventoryPort.findAll();
     }

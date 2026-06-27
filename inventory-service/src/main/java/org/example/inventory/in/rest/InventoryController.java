@@ -32,6 +32,12 @@ public class InventoryController {
                 .orElseThrow(() -> new RuntimeException("Item not found: " + id));
     }
 
+    @GetMapping("/stock")
+    public InventoryItem getStockByName(@RequestParam String name) {
+        return inventoryUseCase.getItemByName(name)
+                .orElseThrow(() -> new RuntimeException("Item not found: " + name));
+    }
+
     @PutMapping("/deduct")
     public InventoryItem deductStock(@RequestParam String name, @RequestParam int quantity) {
         return inventoryUseCase.deductStock(name, quantity);
