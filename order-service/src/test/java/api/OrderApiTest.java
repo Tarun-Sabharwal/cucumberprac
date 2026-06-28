@@ -6,6 +6,9 @@ import io.restassured.response.Response;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
+
+// this method will test the order-service API by first adding stock to the inventory-service 
+// and then creating an order for that product. It will validate the response to ensure that the order was created successfully.
 public class OrderApiTest {
 
     @Test
