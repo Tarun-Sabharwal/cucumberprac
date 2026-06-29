@@ -1,12 +1,11 @@
 package org.example.order.core.usecase;
 
 import org.example.order.common.UseCase;
-import org.example.order.config.RabbitMQConfig;
 import org.example.order.core.domain.Order;
 import org.example.order.core.domain.OrderStatus;
 import org.example.order.core.port.CheckInventoryPort;
 import org.example.order.core.port.ManageOrderPort;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.example.order.core.port.PublishOrderEventPort;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -19,7 +18,7 @@ public class OrderUseCase {
     private ManageOrderPort manageOrderPort;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private PublishOrderEventPort publishOrderEventPort;
 
     @Autowired
     private CheckInventoryPort checkInventoryPort;
@@ -39,8 +38,7 @@ public class OrderUseCase {
         Order saved = manageOrderPort.save(order);
 
         // publish event so inventory-service deducts stock
-        OrderCreatedMessage msg = new OrderCreatedMessage(saved.getId(), saved.getProduct(), saved.getQuantity());
-        rabbitTemplate.convertAndSend(RabbitMQConfig.ORDER_EXCHANGE, RabbitMQConfig.ORDER_ROUTING_KEY, msg);
+        publishOrderEventPort.publishOrderCreated(saved.getId(), saved.getProduct(), saved.getQuantity());
 
         return saved;
     }
