@@ -4,14 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.File;
+import java.util.TimeZone;
 
 @SpringBootApplication
 public class InventoryApplication {
     public static void main(String[] args) throws Exception {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Kolkata"));
         startRabbitMQ();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            try { stopRabbitMQ(); } catch (Exception ignored) {}
-        }));
         SpringApplication.run(InventoryApplication.class, args);
     }
 
